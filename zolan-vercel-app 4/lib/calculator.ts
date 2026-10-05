@@ -1,0 +1,4 @@
+export type Order={price:number;quantity:number;fx:number;china:number;freight:number;imports:number;local:number;sellable:number;sell:number;expenses:number;fixed:number;target:number};
+export const sample:Order={price:40,quantity:100,fx:220,china:40000,freight:500000,imports:200000,local:40000,sellable:100,sell:25000,expenses:4000,fixed:0,target:20};
+export function calculate(o:Order){const supplier=o.price*o.quantity*o.fx;const upfront=supplier+o.china+o.freight+o.imports+o.local;const landed=o.sellable>0?upfront/o.sellable:0;const gross=o.sell-landed;const contribution=gross-o.expenses;const proceeds=o.sell-o.expenses;return {supplier,upfront,landed,gross,contribution,margin:o.sell>0?contribution/o.sell*100:0,recovery:proceeds>0?Math.ceil(upfront/proceeds):null,targetPrice:o.target<100?(landed+o.expenses)/(1-o.target/100):null,operating:contribution*o.sellable-o.fixed}}
+export const money=(n:number)=>"₦"+Math.round(n).toLocaleString("en-NG");

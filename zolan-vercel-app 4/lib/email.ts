@@ -1,0 +1,5 @@
+export type EmailConfig={EMAIL_API_KEY?:string;EMAIL_FROM?:string};
+export async function deliverAccess(config:EmailConfig,email:string,link:string,send:typeof fetch=fetch):Promise<boolean>{
+ if(!config.EMAIL_API_KEY||!config.EMAIL_FROM)return false;
+ try{const r=await send("https://api.resend.com/emails",{method:"POST",signal:AbortSignal.timeout(4000),headers:{Authorization:`Bearer ${config.EMAIL_API_KEY}`,"Content-Type":"application/json"},body:JSON.stringify({from:config.EMAIL_FROM,to:email,subject:"Your Zolan import calculator access",text:`Your calculator is ready.\n\nUse your own supplier price, exchange rate, shipping and selling expenses to estimate the numbers for your China order.\n\nOpen your calculator:\n${link}\n\nYour results depend on the figures you enter. Replace estimates with confirmed quotes as your order progresses.\n\nZolan`})});if(!r.ok)console.error("Access email delivery failed",r.status);return r.ok}catch{console.error("Access email delivery failed");return false}
+}
